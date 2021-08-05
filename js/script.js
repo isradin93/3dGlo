@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 seconds = timer.querySelector('#timer-seconds'),
                 timeInterval = setInterval(updateClock, 1000);
 
-            updateClock(); // Stops blinking layout (Мигание верстки) when we update the page
+            updateClock(); // Stops blinking layout (Мигание верстки) when update the page
 
             function updateClock() {
                 const remainingTime = getTimeRemaining(endTime);
