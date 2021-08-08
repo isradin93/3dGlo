@@ -56,12 +56,13 @@ window.addEventListener('DOMContentLoaded', () => {
     timer('#timer', '2021-08-29');
 
     // Menu
+    const toggleMenu = (triggerSelector, menuSelector, closeBtnSelector, menuItemSelector, scrollBtnSelector) => {
 
-    const toggleMenu = (triggerSelector, menuSelector, closeBtnSelector, menuItemSelector) => {
         const trigger = document.querySelector(triggerSelector),
             menu = document.querySelector(menuSelector),
             closeBtn = document.querySelector(closeBtnSelector),
-            menuItems = document.querySelectorAll(menuItemSelector);
+            menuItems = document.querySelectorAll(menuItemSelector),
+            scrollBtn = document.querySelector(scrollBtnSelector);
 
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
@@ -70,12 +71,40 @@ window.addEventListener('DOMContentLoaded', () => {
         trigger.addEventListener('click', handlerMenu);
         closeBtn.addEventListener('click', handlerMenu);
 
+        let menuInterval;
+        const menuAnimate = hash => {
+            let count = 0;
+            const menuClick = () => {
+                menuInterval = requestAnimationFrame(menuClick);
+                const x = 15;
+                if (count < 825 && hash === '#service-block') {
+                    scrollTo(0, count += x * 1.5);
+                } else if (count < 2031 && hash === '#portfolio') {
+                    scrollTo(0, count += x * 2.5);
+                } else if (count < 3004.5 && hash === '#calc') {
+                    scrollTo(0, count += x * 3.5);
+                } else if (count < 4140 && hash === '#command') {
+                    scrollTo(0, count += x * 4.5);
+                } else if (count < 5046 && hash === '#connect') {
+                    scrollTo(0, count += x * 5.5);
+                } else cancelAnimationFrame(menuInterval);
+            };
 
-        menuItems.forEach(item => item.addEventListener('click', handlerMenu));
+            menuClick();
+        };
 
+        scrollBtn.addEventListener('click', event => {
+            console.dir(event.target);
+            menuAnimate('#service-block');
+        });
+
+        menuItems.forEach(item => item.addEventListener('click', event => {
+            menuAnimate(event.target.hash);
+            handlerMenu();
+        }));
     };
 
-    toggleMenu('.menu', 'menu', '.close-btn', 'ul>li');
+    toggleMenu('.menu', 'menu', '.close-btn', 'ul>li', 'a');
 
     //Modals
     const modals = (triggerBtnSelector, modalSelector, closeBtnSelector) => {
