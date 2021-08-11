@@ -56,27 +56,20 @@ window.addEventListener('DOMContentLoaded', () => {
     timer('#timer', '2021-08-29');
 
     // Menu
-    const toggleMenu = (triggerSelector, menuSelector, closeBtnSelector, menuItemSelector, scrollBtnSelector) => {
-
-        const trigger = document.querySelector(triggerSelector),
-            menu = document.querySelector(menuSelector),
-            closeBtn = document.querySelector(closeBtnSelector),
-            menuItems = document.querySelectorAll(menuItemSelector),
-            scrollBtn = document.querySelector(scrollBtnSelector);
+    const toggleMenu = () => {
+        const menu = document.querySelector('menu'),
+            body = document.querySelector('body');
 
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
         };
 
-        trigger.addEventListener('click', handlerMenu);
-        closeBtn.addEventListener('click', handlerMenu);
-
-        let menuInterval;
         const menuAnimate = hash => {
             let count = 0;
             const menuClick = () => {
-                menuInterval = requestAnimationFrame(menuClick);
+                const menuInterval = requestAnimationFrame(menuClick);
                 const x = 15;
+
                 if (count < 825 && hash === '#service-block') {
                     scrollTo(0, count += x * 1.5);
                 } else if (count < 2031 && hash === '#portfolio') {
@@ -92,28 +85,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
             menuClick();
         };
+        // Общий обработчик событий для меню, close, скрола
+        body.addEventListener('click', event => {
+            const target = event.target;
 
-        scrollBtn.addEventListener('click', event => {
-            console.dir(event.target);
-            menuAnimate('#service-block');
+            if (target.classList.contains('close-btn')) {
+                handlerMenu();
+            } else if (target.closest('.active-menu>ul>li')) {
+                menuAnimate(event.target.hash);
+                handlerMenu();
+            } else if (target.closest('.menu')) {
+                handlerMenu();
+            } else if (target.closest('.scroll_btn')) {
+                menuAnimate('#service-block');
+            }
         });
-
-        menuItems.forEach(item => item.addEventListener('click', event => {
-            menuAnimate(event.target.hash);
-            handlerMenu();
-        }));
     };
 
-    toggleMenu('.menu', 'menu', '.close-btn', 'ul>li', 'a');
+    toggleMenu();
 
     //Modals
-    const modals = (triggerBtnSelector, modalSelector, closeBtnSelector) => {
+    const modals = (triggerBtnSelector, modalSelector, modalContentSelector, closeBtnSelector) => {
         const triggerBtn = document.querySelectorAll(triggerBtnSelector),
             modal = document.querySelector(modalSelector),
+            modalContent = document.querySelector(modalContentSelector),
             closeBtn = document.querySelector(closeBtnSelector);
 
         const openModal = () => {
             modal.style.display = 'block';
+            modalContent.style.position.left = '50%';
             document.body.style.overflow = 'hidden';
         };
 
@@ -167,6 +167,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const closeModal = () => {
             modal.style.display = 'none';
+            modalContent.style.position.left = '-50%';
             document.body.style.overflow = '';
         };
 
@@ -197,6 +198,43 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    modals('.popup-btn', '.popup', '.popup-close');
+    modals('.popup-btn', '.popup', '.popup-content', '.popup-close');
+
+    // Tabs
+    const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
+        const tabHeader = document.querySelector(headerSelector),
+            tabs = document.querySelectorAll(tabSelector),
+            tabContents = document.querySelectorAll(contentSelector);
+
+        const hideTabContent = () => {
+            tabContents.forEach(tabContent => tabContent.style.display = 'none');
+
+            tabs.forEach(tab => tab.classList.remove(activeClass));
+        };
+
+        const showTabContent = (i = 0) => {
+            tabContents[i].style.display = 'flex';
+            tabs[i].classList.add(activeClass);
+        };
+
+        hideTabContent();
+        showTabContent();
+
+        tabHeader.addEventListener('click', e => {
+            const target = e.target;
+
+            if (target && target.classList.contains(tabSelector.replace(/\./, '')) ||
+                target.parentNode.classList.contains(tabSelector.replace(/\./, ''))) {
+                tabs.forEach((tab, i) => {
+                    if (target === tab || target.parentNode === tab) {
+                        hideTabContent();
+                        showTabContent(i);
+                    }
+                });
+            }
+        });
+    };
+
+    tabs('.service-header', '.service-header-tab', '.service-tab', 'active');
 
 });
