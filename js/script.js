@@ -315,4 +315,89 @@ window.addEventListener('DOMContentLoaded', () => {
 
     slider();
 
+    // Change image
+    const changeImage = () => {
+        const comandElem = document.querySelectorAll('.command__photo');
+
+        comandElem.forEach(elem => {
+            elem.addEventListener('mouseover', event => {
+                [event.target.src, event.target.dataset.img] = [event.target.dataset.img, event.target.src];
+            });
+        });
+
+        comandElem.forEach(elem => {
+            elem.addEventListener('mouseout', event => {
+                [event.target.dataset.img, event.target.src] = [event.target.src, event.target.dataset.img];
+            });
+        });
+    };
+
+    changeImage();
+
+    // Regexp
+    const regexpInput = () => {
+        const calcItems = document.querySelectorAll('.calc-item'),
+            formName1 = document.getElementById('form1-name'),
+            formName2 = document.getElementById('form2-name'),
+            formName3 = document.getElementById('form3-name'),
+            formMail1 = document.getElementById('form1-email'),
+            formMail2 = document.getElementById('form2-email'),
+            formMail3 = document.getElementById('form3-email'),
+            formPhone1 = document.getElementById('form1-phone'),
+            formPhone2 = document.getElementById('form2-phone'),
+            formPhone3 = document.getElementById('form3-phone'),
+            formMessage = document.getElementById('form2-message');
+
+        const limitationElems = (elem, regExp) => {
+            elem.addEventListener('keypress', e => {
+                if (!e.key.match(regExp)) {
+                    e.preventDefault();
+                }
+            });
+
+            elem.addEventListener('blur', e => {
+                let elemValue = e.target.value;
+                elemValue = elemValue.replace(/\s+/g, ' ');
+                elemValue = elemValue.replace(/-+/g, '-');
+                elemValue = elemValue.trim().split('');
+
+                while (elemValue[0] === '-') {
+                    elemValue.shift();
+                }
+
+                while (elemValue[elemValue.length - 1] === '-') {
+                    elemValue.pop();
+                }
+
+                e.target.value = elemValue.filter(el => el.match(regExp)).join('');
+
+                if (e.target === formName1 || e.target === formName2 || e.target === formName3) {
+                    let nameRepair = e.target.value.trim().split(' ');
+                    if (nameRepair.length > 1) {
+                        nameRepair = nameRepair.map(el => el.slice(0, 1).toUpperCase() + el.slice(1).toLowerCase());
+                        e.target.value = nameRepair.join(' ');
+                    } else {
+                        nameRepair = nameRepair.toString().slice(0, 1).toUpperCase() +
+                            nameRepair.toString().slice(1).toLowerCase();
+                        e.target.value = nameRepair;
+                    }
+                }
+            });
+        };
+
+        calcItems.forEach(elem => limitationElems(elem, /[0-9]/g));
+
+        limitationElems(formName1, /[а-яА-Я\s-]/g);
+        limitationElems(formName2, /[а-яА-Я\s-]/g);
+        limitationElems(formName3, /[а-яА-Я\s-]/g);
+        limitationElems(formMail1, /[a-zA-Z@_.!~*'-]/g);
+        limitationElems(formMail2, /[a-zA-Z@_.!~*'-]/g);
+        limitationElems(formMail3, /[a-zA-Z@_.!~*'-]/g);
+        limitationElems(formPhone1, /[0-9()+-]/g);
+        limitationElems(formPhone2, /[0-9()+-]/g);
+        limitationElems(formPhone3, /[0-9()+-]/g);
+        limitationElems(formMessage, /[а-яА-Я\s-]/g);
+    };
+
+    regexpInput();
 });
