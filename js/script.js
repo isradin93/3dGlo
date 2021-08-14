@@ -317,16 +317,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Change image
     const changeImage = () => {
-        const comandElem = document.querySelectorAll('.command__photo');
+        const commandPhoto = document.querySelectorAll('.command__photo');
 
-        comandElem.forEach(elem => {
-            elem.addEventListener('mouseover', event => {
+        commandPhoto.forEach(photo => {
+            photo.addEventListener('mouseover', event => {
                 [event.target.src, event.target.dataset.img] = [event.target.dataset.img, event.target.src];
             });
         });
 
-        comandElem.forEach(elem => {
-            elem.addEventListener('mouseout', event => {
+        commandPhoto.forEach(photo => {
+            photo.addEventListener('mouseout', event => {
                 [event.target.dataset.img, event.target.src] = [event.target.src, event.target.dataset.img];
             });
         });
@@ -373,6 +373,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (e.target === formName1 || e.target === formName2 || e.target === formName3) {
                     let nameRepair = e.target.value.trim().split(' ');
+
                     if (nameRepair.length > 1) {
                         nameRepair = nameRepair.map(el => el.slice(0, 1).toUpperCase() + el.slice(1).toLowerCase());
                         e.target.value = nameRepair.join(' ');
