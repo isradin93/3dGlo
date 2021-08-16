@@ -334,10 +334,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
     changeImage();
 
+    // Calc validation
+    const validateCalc = () => {
+        const calcBlock = document.querySelector('.calc-block');
+
+        calcBlock.addEventListener('input', e => {
+            const target = e.target;
+
+            if (target.matches('[type="text"]')) {
+                target.value = target.value.replace(/\D/g, '');
+            }
+        });
+    };
+
+    validateCalc();
+
     // Regexp
-    const regexpInput = () => {
-        const calcItems = document.querySelectorAll('.calc-item'),
-            formName1 = document.getElementById('form1-name'),
+    const validateForm = () => {
+        const formName1 = document.getElementById('form1-name'),
             formName2 = document.getElementById('form2-name'),
             formName3 = document.getElementById('form3-name'),
             formMail1 = document.getElementById('form1-email'),
@@ -386,8 +400,6 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         };
 
-        calcItems.forEach(elem => limitationElems(elem, /[0-9]/g));
-
         limitationElems(formName1, /[а-яА-Я\s-]/g);
         limitationElems(formName2, /[а-яА-Я\s-]/g);
         limitationElems(formName3, /[а-яА-Я\s-]/g);
@@ -400,5 +412,5 @@ window.addEventListener('DOMContentLoaded', () => {
         limitationElems(formMessage, /[а-яА-Я\s-]/g);
     };
 
-    regexpInput();
+    validateForm();
 });
